@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>शुभ नवरात्रि - Special Greeting</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Fireworks Canvas */
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            margin-top: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Input Section */
+        .input-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid #ffd700;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        .create-btn {
+            background: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Card Section */
+        #wishCard {
+            display: none;
+            background: linear-gradient(45deg, #800000, #ff4500);
+            padding: 20px;
+            border-radius: 20px;
+            border: 5px ridge #ffd700;
+            box-shadow: 0 0 30px #ff9900;
+            animation: bounceIn 1s;
+        }
+
+        .matarani-gif {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .name-text {
+            font-size: 24px;
+            color: #ffd700;
+            font-weight: bold;
+            text-shadow: 2px 2px #000;
+        }
+
+        .shayari {
+            font-style: italic;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: bold;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworks"></canvas>
+
+    <div class="container">
+        <!-- Input Form -->
+        <div class="input-box" id="setupBox">
+            <h2 style="color: #ffd700;">Navratri Card Maker</h2>
+            <input type="text" id="userName" placeholder="अपना नाम लिखें...">
+            <p style="font-size: 12px;">अपनी फोटो चुनें (Optional):</p>
+            <input type="file" id="userImg" accept="image/*">
+            <br>
+            <button class="create-btn" onclick="generateCard()">कार्ड बनायें ✨</button>
+        </div>
+
+        <!-- The Card -->
+        <div id="wishCard">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpkaXZtbnR6cnQybW05cmRxcmV4bm91eG5nZTNyeWh0MmZoejR0ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKVUn7iM8FMEU24/giphy.gif" class="matarani-gif" alt="Mata Rani">
+            
+            <div id="photoDisplay"></div>
+            
+            <div class="name-text">🚩 <span id="displayName"></span> 🚩</div>
+            <div style="font-size: 14px;">की तरफ से</div>
+            <h2 style="color: #fff; text-shadow: 2px 2px #ff0000;">शुभ नवरात्रि</h2>
+            
+            <p class="shayari">
+                "माँ दुर्गा का वास हो,<br>
+                दुखों का नाश हो,<br>
+                हर घर में सुख-शान्ति का वास हो।"
+            </p>
+
+            <a href="#" class="whatsapp-btn" onclick="shareWhatsApp()">व्हाट्सएप पर शेयर करें 🚩</a>
+        </div>
+    </div>
+
+    <script>
+        // --- Fireworks Logic ---
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function Firework(x, y, color) {
+            this.x = x; this.y = y; this.color = color;
+            this.counter = 0;
+            this.particles = [];
+            for (let i = 0; i < 30; i++) {
+                this.particles.push({
+                    x: x, y: y,
+                    vx: Math.random() * 4 - 2,
+                    vy: Math.random() * 4 - 2,
+                    alpha: 1
+                });
+            }
+        }
+
+        Firework.prototype.draw = function() {
+            this.particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.vx; p.y += p.vy;
+                p.alpha -= 0.02;
+            });
+        };
+
+        let fireworks = [];
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.05) {
+                fireworks.push(new Firework(Math.random() * canvas.width, Math.random() * canvas.height, `hsl(${Math.random() * 360}, 100%, 50%)`));
+            }
+            fireworks.forEach((f, i) => {
+                f.draw();
+                if (f.particles[0].alpha <= 0) fireworks.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- Card Logic ---
+        function generateCard() {
+            const name = document.getElementById('userName').value;
+            const imgInput = document.getElementById('userImg');
+            
+            if (!name) { alert("कृपया नाम डालें!"); return; }
+
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('setupBox').style.display = 'none';
+            document.getElementById('wishCard').style.display = 'block';
+
+            if (imgInput.files && imgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photoDisplay').innerHTML = `<img src="${e.target.result}" class="user-photo">`;
+                }
+                reader.readAsDataURL(imgInput.files[0]);
+            }
+        }
+
+        function shareWhatsApp() {
+            const name = document.getElementById('displayName').innerText;
+            const text = `🚩 *${name}* ने आपके लिए एक खास सरप्राइज भेजा है! 🚩\n\nजल्दी से नीचे लिंक पर क्लिक करके देखें 👇\n\n${window.location.href}?name=${encodeURIComponent(name)}`;
+            const url = "https://wa.me/?text=" + encodeURIComponent(text);
+            window.open(url, '_blank');
+        }
+
+        // URL से नाम चेक करना (अगर किसी ने भेजा हो)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('name')) {
+            document.getElementById('userName').value = urlParams.get('name');
+            generateCard();
+        }
+    </script>
+</body>
+  </html>
