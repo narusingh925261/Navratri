@@ -74,7 +74,7 @@
 
     <div class="main-container">
 
-        <!-- 1. Top Ad Slot -->
+        <!-- 1. Top Banner Ad Slot -->
         <div class="ad-container">
             <script type="text/javascript">
                 atOptions = {'key' : '5ef61b9ce5db99a105f2eab3538cf716','format' : 'iframe','height' : 60,'width' : 468,'params' : {}};
@@ -101,7 +101,7 @@
             
             <img src="mata.gif" alt="Mata Rani" class="mata-img" id="mataGif" crossorigin="anonymous" onerror="this.src='https://media.giphy.com/media/3o7TKVUn7iM8FMEU24/giphy.gif'">
 
-            <!-- 2. Middle Ad Slot (Inside Card) -->
+            <!-- 2. Middle Banner Ad Slot (Inside Card) -->
             <div class="ad-container">
                 <script type="text/javascript">
                     atOptions = {'key' : '5ef61b9ce5db99a105f2eab3538cf716','format' : 'iframe','height' : 60,'width' : 468,'params' : {}};
@@ -128,7 +128,7 @@
             <button class="create-own-btn" onclick="location.href=location.pathname">अपना खुद का कार्ड बनायें 🛠️</button>
         </div>
 
-        <!-- 3. Bottom Ad Slot -->
+        <!-- 3. Bottom Banner Ad Slot -->
         <div class="ad-container">
             <script type="text/javascript">
                 atOptions = {'key' : '5ef61b9ce5db99a105f2eab3538cf716','format' : 'iframe','height' : 60,'width' : 468,'params' : {}};
@@ -207,7 +207,7 @@
         function downloadCard() {
             const card = document.getElementById('captureCard');
             // एड्स को डाउनलोड में न दिखाने के लिए छुपाएं
-            const ads = card.querySelectorAll('.ad-container');
+            const ads = document.querySelectorAll('.ad-container');
             ads.forEach(ad => ad.style.display = 'none');
 
             html2canvas(card, { useCORS: true, backgroundColor: "#fffbe6" }).then(canvas => {
@@ -257,5 +257,9 @@
             animate();
         }
     </script>
+
+    <!-- सोशल बार एड्स कोड यहाँ है (Social Bar Ads Script) -->
+    <script src="https://pl28927780.profitablecpmratenetwork.com/a7/6e/b4/a76eb4e64e7550bb4bf787ad5dbaa0b4.js"></script>
+
 </body>
 </html>
